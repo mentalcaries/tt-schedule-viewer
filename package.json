@@ -5,12 +5,12 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "wrangler types --check && vite build",
+		"build": "wrangler types --config wrangler.types.jsonc --check && vite build",
 		"preview": "wrangler dev .svelte-kit/cloudflare/_worker.js --port 4173",
 		"prepare": "svelte-kit sync || echo ''",
-		"check": "wrangler types --check && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check": "wrangler types --config wrangler.types.jsonc --check && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"gen": "wrangler types"
+		"gen": "wrangler types --config wrangler.types.jsonc"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-cloudflare": "^7.2.8",

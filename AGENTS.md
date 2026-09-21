@@ -9,7 +9,7 @@
 ## Commands
 
 - `pnpm dev`: run the Vite development server.
-- `pnpm gen`: generate `worker-configuration.d.ts` from `wrangler.jsonc`. Run this on a fresh checkout and after changing Cloudflare bindings; `pnpm check` and `pnpm build` fail when the generated types are missing or stale.
+- `pnpm gen`: generate `worker-configuration.d.ts` through `wrangler.types.jsonc`. Keep its bindings and compatibility settings aligned with `wrangler.jsonc`; omitting the built Worker entrypoint prevents generated `.svelte-kit` output from entering type-checking. Run this on a fresh checkout and after changing Cloudflare bindings.
 - `pnpm check`: canonical static verification (`wrangler types --check`, SvelteKit sync, then `svelte-check`).
 - `pnpm build`: validate Wrangler types, then produce the Cloudflare Worker under `.svelte-kit/cloudflare`.
 - `pnpm preview`: serve the already-built Worker on port 4173; run `pnpm build` first.
