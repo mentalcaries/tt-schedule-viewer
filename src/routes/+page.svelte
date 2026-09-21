@@ -370,16 +370,23 @@
             <div class="mb-3 flex items-center gap-3">
               <h2
                 id={`week-${week.key}`}
-                class="text-sm font-bold text-slate-800"
+                class="text-base font-bold text-slate-800"
               >
                 {weekIndex === 0 ? 'Current week' : `Week ${weekIndex + 1}`}
               </h2>
               <div class="h-px flex-1 bg-slate-200"></div>
-              <p class="text-xs text-slate-500">
+              <p class="text-sm text-slate-500">
                 {formatRange(week.days[0].date, week.days[6].date)}
               </p>
             </div>
 
+            <!-- svelte-ignore a11y_no_noninteractive_tabindex (Scrollable calendar must be keyboard-focusable.) -->
+            <div
+              class="calendar-scroll"
+              role="region"
+              tabindex="0"
+              aria-label={`Week of ${formatDay(week.days[0].date)} calendar`}
+            >
             <div class="week-grid">
               {#each week.days as day (day.date)}
                 <article
@@ -441,6 +448,7 @@
                   </div>
                 </article>
               {/each}
+            </div>
             </div>
           </section>
         {/each}

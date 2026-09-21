@@ -3,7 +3,7 @@ import { CalendlyRequestError, getSchedule, type ScheduleEvent } from '$lib/serv
 import { createScheduleRange, isValidTimeZone } from '$lib/server/date-range';
 import type { PageServerLoad } from './$types';
 
-const DEFAULT_TIMEZONE = 'America/Santo_Domingo';
+const DEFAULT_TIMEZONE = 'America/New_York';
 
 type ErrorKind = 'configuration' | 'authentication' | 'permission' | 'unavailable';
 
