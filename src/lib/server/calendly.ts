@@ -1,4 +1,7 @@
 import { getDateKey, type ScheduleRange } from './date-range';
+import type { OverbookedStudent, ScheduleEvent } from '$lib/schedule';
+
+export type { OverbookedStudent, ScheduleEvent } from '$lib/schedule';
 
 interface CalendlyConfig {
 	token: string;
@@ -30,24 +33,6 @@ interface InviteeIdentity {
 interface PaginatedResponse<T> {
 	collection: T[];
 	pagination: { next_page_token: string | null };
-}
-
-export interface ScheduleEvent {
-	key: string;
-	date: string;
-	name: string;
-	startTime: string;
-	endTime: string;
-	hosts: string[];
-	invitees: string[];
-	inviteesUnavailable: boolean;
-}
-
-export interface OverbookedStudent {
-	name: string;
-	sessionCount: number;
-	weekStart: string;
-	weekEnd: string;
 }
 
 export interface ScheduleResult {

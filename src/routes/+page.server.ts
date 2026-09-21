@@ -1,16 +1,10 @@
 import { env } from '$env/dynamic/private';
-import { CalendlyRequestError, getSchedule, type ScheduleEvent } from '$lib/server/calendly';
+import type { ScheduleError, ScheduleEvent, ScheduleView } from '$lib/schedule';
+import { CalendlyRequestError, getSchedule } from '$lib/server/calendly';
 import { createScheduleRange, isValidTimeZone } from '$lib/server/date-range';
 import type { PageServerLoad } from './$types';
 
 const DEFAULT_TIMEZONE = 'America/New_York';
-
-type ErrorKind = 'configuration' | 'authentication' | 'permission' | 'unavailable';
-
-interface ScheduleError {
-	kind: ErrorKind;
-	missing?: string[];
-}
 
 function isCalendlyUri(value: string, resource: 'organizations' | 'groups') {
 	try {
@@ -46,7 +40,7 @@ export const load: PageServerLoad = async ({ depends, setHeaders, url }) => {
 	depends('app:schedule');
 	setHeaders({ 'cache-control': 'private, no-store' });
 
-	const view = url.searchParams.get('range') === '3' ? 'three-weeks' : 'this-week';
+	const view: ScheduleView = url.searchParams.get('range') === '3' ? 'three-weeks' : 'this-week';
 	const weekCount = view === 'three-weeks' ? 3 : 1;
 	const configuredTimeZone = env.DISPLAY_TIMEZONE?.trim() || DEFAULT_TIMEZONE;
 	const timeZoneIsValid = isValidTimeZone(configuredTimeZone);
@@ -100,7 +94,7 @@ export const load: PageServerLoad = async ({ depends, setHeaders, url }) => {
 			error: null
 		};
 	} catch (error) {
-		const kind: ErrorKind =
+		const kind: ScheduleError['kind'] =
 			error instanceof CalendlyRequestError ? error.kind : 'unavailable';
 
 		return {
