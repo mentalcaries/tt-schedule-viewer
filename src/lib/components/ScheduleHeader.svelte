@@ -70,18 +70,24 @@
 	</div>
 
 	<div class="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center lg:mt-0">
-		<nav class="join grid grid-cols-2" aria-label="Schedule range">
+		<nav class="join grid grid-cols-3" aria-label="Schedule week">
 			<a
-				href="/"
-				class:btn-active={view === 'this-week'}
+				href="?week=last"
+				class:btn-active={view === 'last-week'}
 				class="btn btn-sm join-item"
-				aria-current={view === 'this-week' ? 'page' : undefined}>This week</a
+				aria-current={view === 'last-week' ? 'page' : undefined}>Last week</a
 			>
 			<a
-				href="?range=3"
-				class:btn-active={view === 'three-weeks'}
+				href="/"
+				class:btn-active={view === 'current-week'}
 				class="btn btn-sm join-item"
-				aria-current={view === 'three-weeks' ? 'page' : undefined}>Next 2 weeks</a
+				aria-current={view === 'current-week' ? 'page' : undefined}>Current week</a
+			>
+			<a
+				href="?week=next"
+				class:btn-active={view === 'next-week'}
+				class="btn btn-sm join-item"
+				aria-current={view === 'next-week' ? 'page' : undefined}>Next week</a
 			>
 		</nav>
 		<button

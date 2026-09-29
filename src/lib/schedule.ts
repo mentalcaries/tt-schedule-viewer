@@ -1,4 +1,4 @@
-export type ScheduleView = 'this-week' | 'three-weeks';
+export type ScheduleView = 'last-week' | 'current-week' | 'next-week';
 
 export type ScheduleErrorKind =
 	| 'configuration'

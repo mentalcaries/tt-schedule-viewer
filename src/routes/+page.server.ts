@@ -40,12 +40,18 @@ export const load: PageServerLoad = async ({ depends, setHeaders, url }) => {
 	depends('app:schedule');
 	setHeaders({ 'cache-control': 'private, no-store' });
 
-	const view: ScheduleView = url.searchParams.get('range') === '3' ? 'three-weeks' : 'this-week';
-	const weekCount = view === 'three-weeks' ? 3 : 1;
+	const requestedWeek = url.searchParams.get('week');
+	const view: ScheduleView =
+		requestedWeek === 'last'
+			? 'last-week'
+			: requestedWeek === 'next'
+				? 'next-week'
+				: 'current-week';
+	const weekOffset = view === 'last-week' ? -1 : view === 'next-week' ? 1 : 0;
 	const configuredTimeZone = env.DISPLAY_TIMEZONE?.trim() || DEFAULT_TIMEZONE;
 	const timeZoneIsValid = isValidTimeZone(configuredTimeZone);
 	const timeZone = timeZoneIsValid ? configuredTimeZone : DEFAULT_TIMEZONE;
-	const range = createScheduleRange(new Date(), timeZone, weekCount);
+	const range = createScheduleRange(new Date(), timeZone, weekOffset);
 	const base = {
 		view,
 		timeZone,

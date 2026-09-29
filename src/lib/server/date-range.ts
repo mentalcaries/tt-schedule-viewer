@@ -109,14 +109,16 @@ export function getDateKey(date: Date, timeZone: string) {
 	return formatDate({ year, month, day });
 }
 
-export function createScheduleRange(now: Date, timeZone: string, weekCount: 1 | 3): ScheduleRange {
+export function createScheduleRange(
+	now: Date,
+	timeZone: string,
+	weekOffset: -1 | 0 | 1
+): ScheduleRange {
 	const todayParts = getZonedParts(now, timeZone);
 	const today = { year: todayParts.year, month: todayParts.month, day: todayParts.day };
-	const start = startOfWeek(today);
-	const end = addDays(start, weekCount * 7);
-	const dates = Array.from({ length: weekCount * 7 }, (_, index) =>
-		formatDate(addDays(start, index))
-	);
+	const start = addDays(startOfWeek(today), weekOffset * 7);
+	const end = addDays(start, 7);
+	const dates = Array.from({ length: 7 }, (_, index) => formatDate(addDays(start, index)));
 
 	return {
 		startDate: formatDate(start),

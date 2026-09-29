@@ -49,12 +49,12 @@
 				inviteeFailureCount={data.inviteeFailureCount}
 				overbookedStudents={data.overbookedStudents}
 				eventCount={data.eventCount}
-				view={data.view}
 			/>
 			<ScheduleCalendar
 				weeks={data.weeks}
 				today={data.today}
 				timeZone={data.timeZone}
+				view={data.view}
 				{loading}
 			/>
 		{/if}

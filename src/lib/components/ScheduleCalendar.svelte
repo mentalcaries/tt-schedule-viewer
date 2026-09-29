@@ -4,6 +4,7 @@
 		formatDayNumber,
 		formatRange,
 		formatTime,
+		type ScheduleView,
 		type ScheduleWeek
 	} from '$lib/schedule';
 
@@ -11,18 +12,25 @@
 		weeks: ScheduleWeek[];
 		today: string;
 		timeZone: string;
+		view: ScheduleView;
 		loading: boolean;
 	}
 
-	let { weeks, today, timeZone, loading }: Props = $props();
+	let { weeks, today, timeZone, view, loading }: Props = $props();
+
+	const weekLabels: Record<ScheduleView, string> = {
+		'last-week': 'Last week',
+		'current-week': 'Current week',
+		'next-week': 'Next week'
+	};
 </script>
 
 <div class:opacity-60={loading} class="space-y-8 transition-opacity duration-200" aria-busy={loading}>
-	{#each weeks as week, weekIndex (week.key)}
+	{#each weeks as week (week.key)}
 		<section aria-labelledby={`week-${week.key}`}>
 			<div class="mb-3 flex items-center gap-3">
 				<h2 id={`week-${week.key}`} class="text-base font-bold">
-					{weekIndex === 0 ? 'Current week' : `Week ${weekIndex + 1}`}
+					{weekLabels[view]}
 				</h2>
 				<div class="h-px flex-1 bg-base-300"></div>
 				<p class="text-sm opacity-60">{formatRange(week.days[0].date, week.days[6].date)}</p>

@@ -1,14 +1,13 @@
 <script lang="ts">
-	import { formatRange, type OverbookedStudent, type ScheduleView } from '$lib/schedule';
+	import type { OverbookedStudent } from '$lib/schedule';
 
 	interface Props {
 		inviteeFailureCount: number;
 		overbookedStudents: OverbookedStudent[];
 		eventCount: number;
-		view: ScheduleView;
 	}
 
-	let { inviteeFailureCount, overbookedStudents, eventCount, view }: Props = $props();
+	let { inviteeFailureCount, overbookedStudents, eventCount }: Props = $props();
 </script>
 
 {#if inviteeFailureCount > 0}
@@ -52,11 +51,6 @@
 					>
 						<div>
 							<p class="text-sm font-bold">{student.name}</p>
-							{#if view === 'three-weeks'}
-								<p class="mt-0.5 text-[0.625rem] opacity-65">
-									{formatRange(student.weekStart, student.weekEnd)}
-								</p>
-							{/if}
 						</div>
 						<span class="badge badge-warning badge-sm whitespace-nowrap font-bold">
 							{student.sessionCount} {student.sessionCount === 1 ? 'session' : 'sessions'}
