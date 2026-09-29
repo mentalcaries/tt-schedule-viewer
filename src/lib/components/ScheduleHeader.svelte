@@ -4,6 +4,7 @@
 		formatRange,
 		formatTimezone,
 		formatUpdated,
+		type ScheduleTeam,
 		type ScheduleView
 	} from '$lib/schedule';
 
@@ -13,6 +14,8 @@
 		timeZone: string;
 		lastUpdated: string;
 		eventCount: number;
+		teams: ScheduleTeam[];
+		selectedTeam: ScheduleTeam | null;
 		view: ScheduleView;
 		loading: boolean;
 		refreshing: boolean;
@@ -26,12 +29,33 @@
 		timeZone,
 		lastUpdated,
 		eventCount,
+		teams,
+		selectedTeam,
 		view,
 		loading,
 		refreshing,
 		hasError,
 		onRefresh
 	}: Props = $props();
+
+	const weekPaths: Record<ScheduleView, string> = {
+		'last-week': '/last-week',
+		'current-week': '',
+		'next-week': '/next-week'
+	};
+
+	function teamHref(slug: string) {
+		return `/teams/${slug}${weekPaths[view]}`;
+	}
+
+	function weekHref(week: '' | '/last-week' | '/next-week') {
+		return selectedTeam ? `/teams/${selectedTeam.slug}${week}` : '/';
+	}
+
+	function changeTeam(event: Event) {
+		const select = event.currentTarget as HTMLSelectElement;
+		window.location.assign(teamHref(select.value));
+	}
 </script>
 
 {#if loading}
@@ -43,14 +67,14 @@
 
 <header class="mb-7 border-b border-base-300 pb-6 lg:mb-9 lg:flex lg:items-end lg:justify-between">
 	<div>
-		<div class="mb-4 flex items-center gap-2.5">
+		<a href="/" class="mb-4 flex w-fit items-center gap-2.5" aria-label="Choose another program">
 			<img src={logo} alt="Tripleten Text Logo" class="h-4" />
 			<p class="text-xs font-bold tracking-[0.16em] text-base-content/55 uppercase">
 				Internal schedule
 			</p>
-		</div>
+		</a>
 		<h1 class="font-display text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">
-			AISE Instructor Team Schedule
+			{selectedTeam ? `${selectedTeam.name} Instructor Team Schedule` : 'Instructor Team Schedule'}
 		</h1>
 		<div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-base-content/65">
 			<span class="font-medium text-base-content/85">{formatRange(startDate, endDate)}</span>
@@ -69,22 +93,38 @@
 		</div>
 	</div>
 
-	<div class="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center lg:mt-0">
+	<div class="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end lg:mt-0 lg:justify-end">
+		{#if teams.length > 0}
+			<div class="form-control">
+				<label for="team-select" class="mb-1 text-[0.625rem] font-bold tracking-wide uppercase opacity-60">
+					Program
+				</label>
+				<select
+					id="team-select"
+					class="select select-sm min-w-32"
+					onchange={changeTeam}
+				>
+					{#each teams as team (team.slug)}
+						<option value={team.slug} selected={team.slug === selectedTeam?.slug}>{team.name}</option>
+					{/each}
+				</select>
+			</div>
+		{/if}
 		<nav class="join grid grid-cols-3" aria-label="Schedule week">
 			<a
-				href="?week=last"
+				href={weekHref('/last-week')}
 				class:btn-active={view === 'last-week'}
 				class="btn btn-sm join-item"
 				aria-current={view === 'last-week' ? 'page' : undefined}>Last week</a
 			>
 			<a
-				href="/"
+				href={weekHref('')}
 				class:btn-active={view === 'current-week'}
 				class="btn btn-sm join-item"
 				aria-current={view === 'current-week' ? 'page' : undefined}>Current week</a
 			>
 			<a
-				href="?week=next"
+				href={weekHref('/next-week')}
 				class:btn-active={view === 'next-week'}
 				class="btn btn-sm join-item"
 				aria-current={view === 'next-week' ? 'page' : undefined}>Next week</a

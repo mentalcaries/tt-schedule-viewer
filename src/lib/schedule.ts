@@ -1,5 +1,10 @@
 export type ScheduleView = 'last-week' | 'current-week' | 'next-week';
 
+export interface ScheduleTeam {
+	slug: string;
+	name: string;
+}
+
 export type ScheduleErrorKind =
 	| 'configuration'
 	| 'authentication'

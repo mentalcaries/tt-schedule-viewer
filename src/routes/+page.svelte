@@ -1,62 +1,65 @@
 <script lang="ts">
-	import { invalidateAll } from '$app/navigation';
-	import { navigating } from '$app/state';
-	import ScheduleCalendar from '$lib/components/ScheduleCalendar.svelte';
-	import ScheduleError from '$lib/components/ScheduleError.svelte';
-	import ScheduleHeader from '$lib/components/ScheduleHeader.svelte';
-	import ScheduleNotices from '$lib/components/ScheduleNotices.svelte';
+	import logo from '$lib/assets/tt-text.svg';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
-	let refreshing = $state(false);
-	let loading = $derived(refreshing || navigating.to !== null);
-
-	async function refresh() {
-		if (refreshing) return;
-		refreshing = true;
-		try {
-			await invalidateAll();
-		} finally {
-			refreshing = false;
-		}
-	}
 </script>
 
 <svelte:head>
-	<title>SE Instructor Schedule</title>
-	<meta name="description" content="A read-only weekly view of scheduled SE instructor calls." />
+	<title>Instructor Team Schedules</title>
+	<meta name="description" content="Select an instructor team to view its weekly schedule." />
 </svelte:head>
 
-<main class="min-h-screen bg-base-200 px-4 py-6 text-base-content sm:px-6 lg:px-8 lg:py-9">
-	<div class="mx-auto max-w-[1540px]">
-		<ScheduleHeader
-			startDate={data.startDate}
-			endDate={data.endDate}
-			timeZone={data.timeZone}
-			lastUpdated={data.lastUpdated}
-			eventCount={data.eventCount}
-			view={data.view}
-			{loading}
-			{refreshing}
-			hasError={Boolean(data.error)}
-			onRefresh={refresh}
-		/>
+<main class="grid min-h-screen place-items-center bg-base-200 px-4 py-10 text-base-content sm:px-6">
+	<div class="w-full max-w-4xl">
+		<header class="text-center">
+			<div class="mb-5 flex items-center justify-center gap-2.5">
+				<img src={logo} alt="Tripleten Text Logo" class="h-4" />
+				<p class="text-xs font-bold tracking-[0.16em] text-base-content/55 uppercase">
+					Internal schedule
+				</p>
+			</div>
+			<h1 class="font-display text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">
+				Choose a program
+			</h1>
+			<p class="mt-3 text-sm text-base-content/60">
+				Select an instructor team to view its weekly schedule.
+			</p>
+		</header>
 
-		{#if data.error}
-			<ScheduleError error={data.error} />
+		{#if data.teams.length > 0}
+			<nav class="mt-9 flex flex-wrap justify-center gap-4" aria-label="Instructor programs">
+				{#each data.teams as team (team.slug)}
+					<a
+						href={`/teams/${team.slug}`}
+						class="card card-border group w-full bg-base-100 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.75rem)]"
+					>
+						<div class="card-body flex-row items-center justify-between gap-5">
+							<div>
+								<p class="text-xs font-bold tracking-wide text-base-content/45 uppercase">Program</p>
+								<h2 class="mt-1 text-xl font-bold">{team.name}</h2>
+							</div>
+							<svg
+								class="size-5 opacity-40 transition group-hover:translate-x-1 group-hover:opacity-70"
+								viewBox="0 0 24 24"
+								fill="none"
+								aria-hidden="true"
+							>
+								<path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+							</svg>
+						</div>
+					</a>
+				{/each}
+			</nav>
 		{:else}
-			<ScheduleNotices
-				inviteeFailureCount={data.inviteeFailureCount}
-				overbookedStudents={data.overbookedStudents}
-				eventCount={data.eventCount}
-			/>
-			<ScheduleCalendar
-				weeks={data.weeks}
-				today={data.today}
-				timeZone={data.timeZone}
-				view={data.view}
-				{loading}
-			/>
+			<section class="card card-border mx-auto mt-9 max-w-xl bg-base-100 text-center shadow-sm">
+				<div class="card-body items-center">
+					<h2 class="card-title">No programs available</h2>
+					<p class="text-sm opacity-65">
+						Add a valid team definition and PAT to the private environment configuration.
+					</p>
+				</div>
+			</section>
 		{/if}
 	</div>
 </main>

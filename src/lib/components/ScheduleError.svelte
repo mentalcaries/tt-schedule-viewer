@@ -36,7 +36,7 @@
 		{:else if error.kind === 'permission'}
 			<h2 id="error-title" class="card-title mt-2">Calendly permission required</h2>
 			<p class="max-w-lg text-sm opacity-65">
-				The configured token cannot read scheduled events for the SE Instructors group.
+				The configured token cannot read scheduled events for this team.
 			</p>
 		{:else if error.kind === 'authentication'}
 			<h2 id="error-title" class="card-title mt-2">Calendly connection needs attention</h2>
